@@ -188,8 +188,8 @@ func (ml *memoryLimiter) processTraces(ctx context.Context, td ptrace.Traces) (p
 
 	// Even if the next consumer returns error record the data as accepted by
 	// this processor.
-	ml.obsrep.TracesAccepted(ctx, numSpans)
-	return td, nil
+	err := ml.obsrep.TracesAccepted(ctx, numSpans)
+	return td, err
 }
 
 func (ml *memoryLimiter) processMetrics(ctx context.Context, md pmetric.Metrics) (pmetric.Metrics, error) {
@@ -206,8 +206,8 @@ func (ml *memoryLimiter) processMetrics(ctx context.Context, md pmetric.Metrics)
 
 	// Even if the next consumer returns error record the data as accepted by
 	// this processor.
-	ml.obsrep.MetricsAccepted(ctx, numDataPoints)
-	return md, nil
+	err := ml.obsrep.MetricsAccepted(ctx, numDataPoints)
+	return md, err
 }
 
 func (ml *memoryLimiter) processLogs(ctx context.Context, ld plog.Logs) (plog.Logs, error) {
@@ -225,8 +225,8 @@ func (ml *memoryLimiter) processLogs(ctx context.Context, ld plog.Logs) (plog.Lo
 
 	// Even if the next consumer returns error record the data as accepted by
 	// this processor.
-	ml.obsrep.LogsAccepted(ctx, numRecords)
-	return ld, nil
+	err := ml.obsrep.LogsAccepted(ctx, numRecords)
+	return ld, err
 }
 
 func (ml *memoryLimiter) readMemStats() *runtime.MemStats {
