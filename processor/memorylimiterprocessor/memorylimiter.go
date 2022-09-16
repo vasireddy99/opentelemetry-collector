@@ -181,7 +181,10 @@ func (ml *memoryLimiter) processTraces(ctx context.Context, td ptrace.Traces) (p
 		// 	to a receiver (ie.: a receiver is on the call stack). For now it
 		// 	assumes that the pipeline is properly configured and a receiver is on the
 		// 	callstack.
-		ml.obsrep.TracesRefused(ctx, numSpans)
+		err := ml.obsrep.TracesRefused(ctx, numSpans)
+		if err != nil {
+			return ptrace.Traces{}, err
+		}
 
 		return td, errForcedDrop
 	}
@@ -200,7 +203,10 @@ func (ml *memoryLimiter) processMetrics(ctx context.Context, md pmetric.Metrics)
 		// 	to a receiver (ie.: a receiver is on the call stack). For now it
 		// 	assumes that the pipeline is properly configured and a receiver is on the
 		// 	callstack.
-		ml.obsrep.MetricsRefused(ctx, numDataPoints)
+		err := ml.obsrep.MetricsRefused(ctx, numDataPoints)
+		if err != nil {
+			return pmetric.Metrics{}, err
+		}
 		return md, errForcedDrop
 	}
 
@@ -218,8 +224,10 @@ func (ml *memoryLimiter) processLogs(ctx context.Context, ld plog.Logs) (plog.Lo
 		// 	to a receiver (ie.: a receiver is on the call stack). For now it
 		// 	assumes that the pipeline is properly configured and a receiver is on the
 		// 	callstack.
-		ml.obsrep.LogsRefused(ctx, numRecords)
-
+		err := ml.obsrep.LogsRefused(ctx, numRecords)
+		if err != nil {
+			return plog.Logs{}, err
+		}
 		return ld, errForcedDrop
 	}
 
