@@ -468,9 +468,12 @@ func TestProcessorTraceData(t *testing.T) {
 		ProcessorID:             processor,
 		ProcessorCreateSettings: tt.ToProcessorCreateSettings(),
 	})
-	obsrep.TracesAccepted(context.Background(), acceptedSpans)
-	obsrep.TracesRefused(context.Background(), refusedSpans)
-	obsrep.TracesDropped(context.Background(), droppedSpans)
+	errTA := obsrep.TracesAccepted(context.Background(), acceptedSpans)
+	require.NoError(t, errTA)
+	errTR := obsrep.TracesRefused(context.Background(), refusedSpans)
+	require.NoError(t, errTR)
+	errTD := obsrep.TracesDropped(context.Background(), droppedSpans)
+	require.NoError(t, errTD)
 
 	require.NoError(t, obsreporttest.CheckProcessorTraces(tt, processor, acceptedSpans, refusedSpans, droppedSpans))
 }
@@ -488,9 +491,12 @@ func TestProcessorMetricsData(t *testing.T) {
 		ProcessorID:             processor,
 		ProcessorCreateSettings: tt.ToProcessorCreateSettings(),
 	})
-	obsrep.MetricsAccepted(context.Background(), acceptedPoints)
-	obsrep.MetricsRefused(context.Background(), refusedPoints)
-	obsrep.MetricsDropped(context.Background(), droppedPoints)
+	errMA := obsrep.MetricsAccepted(context.Background(), acceptedPoints)
+	require.NoError(t, errMA)
+	errMR := obsrep.MetricsRefused(context.Background(), refusedPoints)
+	require.NoError(t, errMR)
+	errMD := obsrep.MetricsDropped(context.Background(), droppedPoints)
+	require.NoError(t, errMD)
 
 	require.NoError(t, obsreporttest.CheckProcessorMetrics(tt, processor, acceptedPoints, refusedPoints, droppedPoints))
 }
@@ -530,9 +536,12 @@ func TestProcessorLogRecords(t *testing.T) {
 		ProcessorID:             processor,
 		ProcessorCreateSettings: tt.ToProcessorCreateSettings(),
 	})
-	obsrep.LogsAccepted(context.Background(), acceptedRecords)
-	obsrep.LogsRefused(context.Background(), refusedRecords)
-	obsrep.LogsDropped(context.Background(), droppedRecords)
+	errLA := obsrep.LogsAccepted(context.Background(), acceptedRecords)
+	require.NoError(t, errLA)
+	errLR := obsrep.LogsRefused(context.Background(), refusedRecords)
+	require.NoError(t, errLR)
+	errLD := obsrep.LogsDropped(context.Background(), droppedRecords)
+	require.NoError(t, errLD)
 
 	require.NoError(t, obsreporttest.CheckProcessorLogs(tt, processor, acceptedRecords, refusedRecords, droppedRecords))
 }

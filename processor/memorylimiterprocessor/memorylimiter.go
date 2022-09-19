@@ -183,7 +183,7 @@ func (ml *memoryLimiter) processTraces(ctx context.Context, td ptrace.Traces) (p
 		// 	callstack.
 		err := ml.obsrep.TracesRefused(ctx, numSpans)
 		if err != nil {
-			return ptrace.Traces{}, err
+			return td, err
 		}
 
 		return td, errForcedDrop
@@ -192,7 +192,10 @@ func (ml *memoryLimiter) processTraces(ctx context.Context, td ptrace.Traces) (p
 	// Even if the next consumer returns error record the data as accepted by
 	// this processor.
 	err := ml.obsrep.TracesAccepted(ctx, numSpans)
-	return td, err
+	if err != nil {
+		return td, err
+	}
+	return td, nil
 }
 
 func (ml *memoryLimiter) processMetrics(ctx context.Context, md pmetric.Metrics) (pmetric.Metrics, error) {
@@ -205,7 +208,7 @@ func (ml *memoryLimiter) processMetrics(ctx context.Context, md pmetric.Metrics)
 		// 	callstack.
 		err := ml.obsrep.MetricsRefused(ctx, numDataPoints)
 		if err != nil {
-			return pmetric.Metrics{}, err
+			return md, err
 		}
 		return md, errForcedDrop
 	}
@@ -213,7 +216,10 @@ func (ml *memoryLimiter) processMetrics(ctx context.Context, md pmetric.Metrics)
 	// Even if the next consumer returns error record the data as accepted by
 	// this processor.
 	err := ml.obsrep.MetricsAccepted(ctx, numDataPoints)
-	return md, err
+	if err != nil {
+		return md, err
+	}
+	return md, nil
 }
 
 func (ml *memoryLimiter) processLogs(ctx context.Context, ld plog.Logs) (plog.Logs, error) {
@@ -226,7 +232,7 @@ func (ml *memoryLimiter) processLogs(ctx context.Context, ld plog.Logs) (plog.Lo
 		// 	callstack.
 		err := ml.obsrep.LogsRefused(ctx, numRecords)
 		if err != nil {
-			return plog.Logs{}, err
+			return ld, err
 		}
 		return ld, errForcedDrop
 	}
@@ -234,7 +240,10 @@ func (ml *memoryLimiter) processLogs(ctx context.Context, ld plog.Logs) (plog.Lo
 	// Even if the next consumer returns error record the data as accepted by
 	// this processor.
 	err := ml.obsrep.LogsAccepted(ctx, numRecords)
-	return ld, err
+	if err != nil {
+		return ld, err
+	}
+	return ld, nil
 }
 
 func (ml *memoryLimiter) readMemStats() *runtime.MemStats {
